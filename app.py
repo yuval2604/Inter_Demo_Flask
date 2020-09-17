@@ -13,11 +13,28 @@ user_records = db.user_records
 
 @app.route('/')
 def hello():
-    record = getRecord("5f627ac9e7179a472eae094e")
-    print(record)
-    pushRecord(1, "Amit", "16", "OPEN")
-    record = getRecord(1)
-    print(record)
+    """ 
+        record = getRecord("5f627ac9e7179a472eae094e")
+        print(record)
+        pushRecord(1, "Amit", "16", "OPEN")
+        record = getRecord(1)
+        print(record) 
+    """
+
+    return "Hello World!"
+
+
+@app.route('/user/<string:username>')
+def GetAllUsers(username):
+    print(username)
+    """ 
+        record = getRecord("5f627ac9e7179a472eae094e")
+        print(record)
+        pushRecord(1, "Amit", "16", "OPEN")
+        record = getRecord(1)
+        print(record) 
+    """
+
     return "Hello World!"
 
 
