@@ -1,1 +1,2 @@
-pip install Flask-PyMongo
+Flask-PyMongo
+Python=3.7.7
