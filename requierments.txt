@@ -1,2 +1,6 @@
 Flask-PyMongo
-Python=3.7.7
+python
+flask.json
+bson
+datetime
+pymongo
