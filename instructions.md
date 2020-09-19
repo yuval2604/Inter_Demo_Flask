@@ -4,6 +4,8 @@ pushNewUserRecord(1,'Yuval', 1)
 
 pushNewUserRecord(2,'Yoav', 2)
 
+->Can be also create in the auth branch using register page
+
 # create 4 Messages
 
 today = date.today()
@@ -37,7 +39,8 @@ getAllUnreadRecords(2)
 DeleteMessage('5f6487c69e6f2c95e3f688db')
 
 POST REQUESTS :
-(with parameters in body)
+
+(with parameters in body - sender, receiver, message, subject)
 http://localhost:5000/sendMessage
 
 http://localhost:5000/messages/2
@@ -48,5 +51,6 @@ http://localhost:5000/readMessage/5f648b4d9e6f2c95e3f688dc
 
 http://localhost:5000/delete/5f648b4d9e6f2c95e3f688dc
 
+In auth branch
 (with parameters - id , name, password)
 http://localhost:5000/register
