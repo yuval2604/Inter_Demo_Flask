@@ -11,8 +11,6 @@ a message contains :
 3. message
 4. subject
 5. creation date
-   <<<<<<< HEAD
-   =======
 
 The rest API should contains :
 
@@ -22,11 +20,8 @@ The rest API should contains :
 - Read message (return one message)
 - Delete message (as owner or as receiver)
 
-<<<<<<< HEAD
-
 # Heroku Upload
 
-=======
 Deploy a new MongoDB(mlab) project
 
 Build 2 collections :
