@@ -47,3 +47,6 @@ http://localhost:5000/unreadmessages/2
 http://localhost:5000/readMessage/5f648b4d9e6f2c95e3f688dc
 
 http://localhost:5000/delete/5f648b4d9e6f2c95e3f688dc
+
+(with parameters - id , name, password)
+http://localhost:5000/register
