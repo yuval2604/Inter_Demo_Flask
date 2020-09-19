@@ -100,7 +100,7 @@ def register():
 
         return 'That username already exists!'
 
-    return 'register page'
+    return render_template('register.html')
 
 # Login page
 # Saves data to the session Cookies
