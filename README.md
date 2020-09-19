@@ -14,8 +14,7 @@ a message contains :
    <<<<<<< HEAD
    =======
 
-> > > > > > > dev
-> > > > > > > The rest API should contains :
+The rest API should contains :
 
 - Write message
 - Get all messages for a specific user
@@ -60,5 +59,3 @@ note :
 
 user id cann't be an integer cause can start with 0
 therefore define as string
-
-> > > > > > > dev

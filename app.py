@@ -1,10 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session, render_template, url_for, request, redirect
 import pymongo
 from pymongo import MongoClient
 from flask.json import JSONEncoder
 from bson import ObjectId
 from datetime import date
-
+import bcrypt
 
 app = Flask(__name__)
 
@@ -18,6 +18,8 @@ message_records = db.message_records
 
 @app.route('/')
 def main():
+    if 'username' in session:
+        return 'You are logged in as ' + session['username']
     return "Welcome to my FLASK website"
 
 
@@ -56,6 +58,39 @@ def ReadMessage(message_id):
 def deleteMessage(message_id):
     DeleteMessage(message_id)
     return "delete page"
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    if request.method == 'POST':
+
+        existing_user = user_records.find_one(
+            {"id": request.form['id']}, {'_id': 0})
+
+        if existing_user is None:
+            hashpass = bcrypt.hashpw(
+                request.form['password'].encode('utf-8'), bcrypt.gensalt())
+            user_records.insert(
+                {'id': request.form['id'], 'name': request.form['username'], 'password': hashpass})
+            session['username'] = request.form['username']
+            return 'register complete'
+
+        return 'That username already exists!'
+
+    return 'register page'
+
+
+@app.route('/login', methods=['POST'])
+def login():
+
+    login_user = user_records.find_one({'name': request.form['username']})
+
+    if login_user:
+        if bcrypt.hashpw(request.form['password'].encode('utf-8'), login_user['password']) == login_user['password']:
+            session['username'] = request.form['username']
+            return redirect(url_for('main'))
+
+    return 'Invalid username or password'
 
 
 # GET METHODS:
@@ -137,20 +172,6 @@ def DeleteMessage(message_id):
 # CREATE METHOD
 # To push data to the collection
 
-"""
-INPUT : message_id
-OUTPUT:
-"""
-
-
-def pushNewUserRecord(user_id, name, password):
-    record = {
-        "id": user_id,
-        "name": name,
-        "password": password,
-    }
-    user_records.insert_one(record)
-
 
 def pushMessage(sender_id, receiver_id, message, subject, creation_date):
     record = {
@@ -172,4 +193,5 @@ def convertCursorToObject(cursor):
 
 
 if __name__ == '__main__':
+    app.secret_key = 'mysecret'
     app.run()
