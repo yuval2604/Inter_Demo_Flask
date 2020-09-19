@@ -1,10 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session, render_template, url_for, request, redirect
 import pymongo
 from pymongo import MongoClient
 from flask.json import JSONEncoder
 from bson import ObjectId
 from datetime import date
-
+import bcrypt
 
 app = Flask(__name__)
 
@@ -15,12 +15,17 @@ db = client.get_default_database('flaskinterview')
 user_records = db.user_records
 message_records = db.message_records
 
-
+# Default page
+# If already login redirect to relavent page
 @app.route('/')
 def main():
-    return "Welcome to my FLASK website"
+    if 'username' in session and 'id' in session:
+        return 'You are logged in as ' + session['username'] + session['id']
+    return render_template('index.html')
 
-
+# Create a new message
+# INPUT  :  sender , receiver, message, subject
+# OUTPUT :
 @app.route("/sendMessage", methods=['POST'])
 def sendMessage():
     req_data = request.form.to_dict()
@@ -34,28 +39,84 @@ def sendMessage():
     return "sendMessage Page"
 
 
+# Sends back to the user all the messages recieve by this user
+# INPUT  : message_id
+# OUTPUT : Mesaages as json
 @app.route('/messages/<string:user_id>')
 def GetAllMessages(user_id):
     records = getAllRecords(user_id)
     return jsonify({'messages': records})
 
 
+# Get the user_id from the session login
+# Sends back to the user all the messages recieve by this user
+# INPUT  :
+# OUTPUT : Mesaages as json
+@app.route('/messagesLoggin')
+def GetAllMessagesSession():
+    records = getAllRecords(session['id'])
+    return jsonify({'messages': records})
+
+# Sends back to the user all the Unread messages recieve by this user
 @app.route('/unreadmessages/<string:user_id>')
 def GetAllUnreadMessages(user_id):
     records = getAllUnreadRecords(user_id)
     return jsonify({'messages': records})
 
-
+# Read a meessage
+# INPUT  : message_id
+# OUTPUT : mesaage as json
 @app.route('/readMessage/<string:message_id>')
 def ReadMessage(message_id):
     record = ReadMessage(message_id)
     return jsonify({'messages': record})
 
-
+# Delete a meessage
+# INPUT  : message_id
+# OUTPUT
 @app.route('/delete/<string:message_id>')
 def deleteMessage(message_id):
     DeleteMessage(message_id)
     return "delete page"
+
+
+# Register page
+# If allready exist Returns appropriate message
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    if request.method == 'POST':
+
+        existing_user = user_records.find_one(
+            {"id": request.form['id']}, {'_id': 0})
+
+        if existing_user is None:
+            hashpass = bcrypt.hashpw(
+                request.form['password'].encode('utf-8'), bcrypt.gensalt())
+            user_records.insert(
+                {'id': request.form['id'], 'name': request.form['username'], 'password': hashpass})
+            session['username'] = request.form['username']
+            session['id'] = request.form['id']
+            return 'register complete'
+
+        return 'That username already exists!'
+
+    return render_template('register.html')
+
+# Login page
+# Saves data to the session Cookies
+# redirect to main (default page)
+@app.route('/login', methods=['POST'])
+def login():
+
+    login_user = user_records.find_one({'name': request.form['username']})
+
+    if login_user:
+        if bcrypt.hashpw(request.form['password'].encode('utf-8'), login_user['password']) == login_user['password']:
+            session['username'] = request.form['username']
+            session['id'] = login_user['id']
+            return redirect(url_for('main'))
+
+    return 'Invalid username or password'
 
 
 # GET METHODS:
@@ -137,20 +198,6 @@ def DeleteMessage(message_id):
 # CREATE METHOD
 # To push data to the collection
 
-"""
-INPUT : message_id
-OUTPUT:
-"""
-
-
-def pushNewUserRecord(user_id, name, password):
-    record = {
-        "id": user_id,
-        "name": name,
-        "password": password,
-    }
-    user_records.insert_one(record)
-
 
 def pushMessage(sender_id, receiver_id, message, subject, creation_date):
     record = {
@@ -164,6 +211,7 @@ def pushMessage(sender_id, receiver_id, message, subject, creation_date):
     message_records.insert_one(record)
 
 
+# Convert pymongo.cursor -> dict
 def convertCursorToObject(cursor):
     x = []
     for i in cursor:
@@ -172,4 +220,5 @@ def convertCursorToObject(cursor):
 
 
 if __name__ == '__main__':
+    app.secret_key = 'mysecret'
     app.run()
