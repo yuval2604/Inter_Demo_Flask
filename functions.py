@@ -61,7 +61,7 @@ OUTPUT:
 """
 
 
-def ReadMessage(message_id):
+def ReadMessageFunc(message_id):
     record = message_records.find_one_and_update(
         {'_id': ObjectId(message_id)},
         {"$set":
@@ -80,7 +80,7 @@ OUTPUT:
 """
 
 
-def DeleteMessage(message_id):
+def DeleteMessageFunc(message_id):
     message_records.delete_one(
         {
             "_id": ObjectId(message_id)

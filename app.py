@@ -57,7 +57,8 @@ def GetAllUnreadMessages(user_id):
 # OUTPUT : mesaage as json
 @app.route('/readMessage/<string:message_id>')
 def ReadMessage(message_id):
-    record = ReadMessage(message_id)
+    record = ReadMessageFunc(message_id)
+
     return jsonify({'messages': record})
 
 # Delete a meessage
@@ -65,7 +66,7 @@ def ReadMessage(message_id):
 # OUTPUT
 @app.route('/delete/<string:message_id>')
 def deleteMessage(message_id):
-    DeleteMessage(message_id)
+    DeleteMessageFunc(message_id)
     return "delete page"
 
 
