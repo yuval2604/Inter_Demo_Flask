@@ -35,7 +35,7 @@ OUTPUT: All messages of a specific user
 
 
 def getAllRecords(user_id):
-    records = message_records.find({'receiver': int(user_id)}, {'_id': 0})
+    records = message_records.find({'receiver': (user_id)}, {'_id': 0})
     return convertCursorToObject(records)
 
 
@@ -47,7 +47,7 @@ OUTPUT: All unread messages of a specific user
 
 def getAllUnreadRecords(user_id):
     records = message_records.find({
-        'receiver': int(user_id),
+        'receiver': (user_id),
         'Seen': 'false'
     }, {'_id': 0})
     return convertCursorToObject(records)

@@ -43,13 +43,30 @@ POST REQUESTS :
 (with parameters in body - sender, receiver, message, subject)
 http://localhost:5000/sendMessage
 
+EX:
+sender: 2
+receiver: 3
+message : "hello world'
+subject : "Hi , This is my message"
+
+OR
+https://interviewheroku.herokuapp.com/sendMessage
+
 http://localhost:5000/messages/2
+OR
+https://interviewheroku.herokuapp.com/messages/2
 
 http://localhost:5000/unreadmessages/2
+OR
+https://interviewheroku.herokuapp.com/unreadmessages/2
 
 http://localhost:5000/readMessage/5f648b4d9e6f2c95e3f688dc
+OR
+https://interviewheroku.herokuapp.com/readMessage/5f648b4d9e6f2c95e3f688dc
 
 http://localhost:5000/delete/5f648b4d9e6f2c95e3f688dc
+OR
+https://interviewheroku.herokuapp.com/delete/5f648b4d9e6f2c95e3f688dc
 
 In auth branch
 (with parameters - id , name, password)
