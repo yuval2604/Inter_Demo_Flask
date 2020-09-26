@@ -1,10 +1,8 @@
-from flask import Flask, request, jsonify, session, render_template, url_for, request, redirect
-import pymongo
-from pymongo import MongoClient
-from flask.json import JSONEncoder
-from bson import ObjectId
 from datetime import date
-from functions import *
+
+from flask import Flask, jsonify, request
+
+from .functions import *
 
 app = Flask(__name__)
 
@@ -15,11 +13,13 @@ db = client.get_default_database('flaskinterview')
 user_records = db.user_records
 message_records = db.message_records
 
+
 # Default page
-# If already login redirect to relavent page
+# If already login redirect to relevant page
 @app.route('/')
 def main():
-    return "Welcome to my flask page"
+    return "ok"
+
 
 # Create a new message
 # INPUT  :  sender , receiver, message, subject
@@ -42,7 +42,7 @@ def sendMessage():
 # OUTPUT : Mesaages as json
 @app.route('/messages/<string:user_id>')
 def GetAllMessages(user_id):
-    records = getAllRecords(user_id)
+    records = get_all_records(user_id)
     return jsonify({'messages': records})
 
 
@@ -52,6 +52,7 @@ def GetAllUnreadMessages(user_id):
     records = getAllUnreadRecords(user_id)
     return jsonify({'messages': records})
 
+
 # Read a meessage
 # INPUT  : message_id
 # OUTPUT : mesaage as json
@@ -60,6 +61,7 @@ def ReadMessage(message_id):
     record = ReadMessageFunc(message_id)
 
     return jsonify({'messages': record})
+
 
 # Delete a meessage
 # INPUT  : message_id

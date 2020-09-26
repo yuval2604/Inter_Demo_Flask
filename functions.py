@@ -1,9 +1,5 @@
 import pymongo
-from pymongo import MongoClient
-from flask.json import JSONEncoder
 from bson import ObjectId
-from datetime import date
-
 
 MONGO_URI = "mongodb://user:Aa123456@ds055980.mlab.com:55980/flaskinterview"
 client = pymongo.MongoClient(MONGO_URI, retryWrites=False)
@@ -23,7 +19,7 @@ OUTPUT: User record - Info of the user
 """
 
 
-def getOneUserRecord(user_id):
+def get_one_user_record(user_id):
     record = user_records.find_one({"id": user_id}, {'_id': 0})
     return record
 
@@ -34,7 +30,7 @@ OUTPUT: All messages of a specific user
 """
 
 
-def getAllRecords(user_id):
+def get_all_records(user_id):
     records = message_records.find({'receiver': (user_id)}, {'_id': 0})
     return convertCursorToObject(records)
 

@@ -34,7 +34,7 @@ password - string
 
 message_records:
 
-0. \_id - Assigned Degaulty by mongo db
+0. \_id - Assigned by default by mongo db
 
 1. sender (owner) - user_id -string
 2. receiver - user_id - string
